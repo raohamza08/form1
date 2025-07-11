@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EurosHub - Time Tracking Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="https://raw.githubusercontent.com/raohamza08/EurosHub/main/EurosHub.png" type="image/png" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.3.0/tsparticles.bundle.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+</head>
+
+<body data-theme="dark">
+   <div id="passwordOverlay" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+">
+  <h2 style="margin-bottom: 20px; color: #00BFA6;">Enter Password to Continue</h2>
+  <input type="password" id="passwordInput" placeholder="Password" style="
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 260px;
+    text-align: center;
+  ">
+  <button onclick="checkPassword()" style="
+    padding: 10px 18px;
+    font-size: 16px;
+    background-color: #00BFA6;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+  ">Enter</button>
+  <p id="passwordError" style="color: #f87171; margin-top: 10px; display: none;">Incorrect password</p>
+</div>
+
+  <!-- Main Selection Page -->
+   <div id="stars-js"></div>   
+<div id="tsparticles" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+    <div id="portalContent" style="display: none;">
+
+  <div class="glass-container" id="selectionPage">
+    <div class="logo-header">
+      <img src="https://raw.githubusercontent.com/raohamza08/EurosHub/main/EurosHub.png" class="logo" alt="EurosHub Logo" />
+      <div class="brand-name">EurosHub</div>
+    </div>
+
+    <h2 class="form-title"><i class="fas fa-clock" style="margin-right: 10px;"></i>Time Tracking Portal</h2>
+    
+    <p style="text-align: center; margin-bottom: 30px;">Select the type of time entry you'd like to record:</p>
+    
+    <div class="selection-cards">
+     
+      <div class="selection-card" id="reportIntakeBtn">
+        <i class="fas fa-tasks" ></i>
+        <h3>Project Time Tracking</h3>
+        <p>Track your project hours</p>
+        <button class="btn btn-secondary">
+           Add Tracking Time
+        </button>
+        <span class="snake-line"></span>
+      </div>
+      
+      <div class="selection-card" id="overtimeRequestBtn">
+        <i class="fas fa-business-time"></i>
+        <h3>Overtime Request</h3>
+        <p>Submit overtime hours</p>
+        <button class="btn btn-secondary">
+        Add Overtime
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Time Tracking Form -->
+   <div id="mainContent" style="display: none;"></div>
+  <div class="glass-container hidden" id="projectForm">
+    <button class="back-btn" id="backFromProject">
+      <i class="fas fa-arrow-left"></i> Back to Portal
+    </button>
+    
+    <div class="logo-header">
+      <img src="https://raw.githubusercontent.com/raohamza08/EurosHub/main/EurosHub.png" class="logo" alt="EurosHub Logo" />
+      <div class="brand-name">EurosHub</div>
+    </div>
+
+    <h2 class="form-title"><i class="fas fa-tasks" style="margin-right: 10px;"></i>Project Time Tracking</h2>
+    <p style="text-align: center; margin-bottom: 25px;">Please fill in the details below to record your time</p>
+    
+    <div id="projectFormArea">
+      <!-- Dropdown for Time Type -->
+<div class="form-group">
+  <label for="timeTypeSelect">Time Type</label>
+  <select id="timeTypeSelect" name="timeType" required>
+     <option value="" disabled selected>Select Time Type</option>
+    <option value="Hourly Tracked" >Hourly Tracked</option>
+    <option value="Manual Time">Manual Time</option>
+    <option value="Test Task">Test Task</option>
+    <option value="Fixed Project">Fixed Project</option>
+    <option value="Internal Project">Internal Project</option>
+  </select>
+</div>
+
+
+      <div class="form-grid-two-column">
+        <div class="form-group">
+          <label for="profileName"><i class="fas fa-user"></i>Profile Name *</label>
+          <select id="profileName" required>
+            <option value="" disabled selected>Select Profile</option>
+          </select>
+          <i class="fas fa-chevron-down input-icon"></i>
+        </div>
+
+        <div class="form-group">
+          <label for="projectName"><i class="fas fa-project-diagram"></i>Client Name *</label>
+          <select id="projectName" required>
+            <option value="" disabled selected>Select Client</option>
+          </select>
+          <i class="fas fa-chevron-down input-icon"></i>
+          <div id="otherProjectGroup" class="hidden other-project-input">
+            <input type="text" id="otherProject" name="otherProject" placeholder="Specify Client Name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="teamMember"><i class="fas fa-users"></i>Team Member *</label>
+          <select id="teamMember" required>
+            <option value="" disabled selected>Select Team Member</option>
+          </select>
+          <i class="fas fa-chevron-down input-icon"></i>
+        </div>
+
+        <div class="form-group">
+          <label for="trackingDate"><i class="far fa-calendar-alt"></i>Tracking Date *</label>
+          <input type="date" id="trackingDate" required>
+        </div>
+      </div>
+      
+      <div class="time-group">
+        <div class="form-group">
+          <label for="startTime"><i class="far fa-clock"></i>Start Time *</label>
+          <select id="startTime" required><option value="" disabled selected>Select Start Time</option></select>
+          <i class="fas fa-chevron-down input-icon"></i>
+        </div>
+        <div class="form-group">
+          <label for="endTime"><i class="far fa-clock"></i>End Time *</label>
+          <select id="endTime" required><option value="" disabled selected>Select End Time</option></select>
+          <i class="fas fa-chevron-down input-icon"></i>
+        </div>
+      </div>
+      
+      <div class="hours-display">
+        <i class="fas fa-calculator"></i> Total Time: <span id="totalTimeLabel">0:00</span>
+      </div>
+      <input type="hidden" name="totalTime" id="totalTime">
+      
+      <div class="form-group">
+        <label for="memo"><i class="far fa-sticky-note"></i>Memo</label>
+        <textarea id="memo" placeholder="Add any notes about this time entry..."></textarea>
+      </div>
+      
+      <div class="project-button-group">
+        <div class="form-group">
+          <button type="button" id="submitProjectBtn" class="btn">
+            <i class="fas fa-paper-plane"></i> Submit Time Entry
+          </button>
+        </div>
+        <div class="form-group">
+          <button type="button" id="resetProjectBtn" class="btn btn-secondary">
+            <i class="fas fa-redo"></i> Reset Form
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="thank-you hidden" id="projectThankYou">
+      <h3><i class="fas fa-check-circle" style="color: var(--secondary); margin-right: 10px;"></i> Submission Successful!</h3>
+      <p>Your time entry has been successfully recorded.</p>
+      <button class="btn" id="anotherProjectEntry">
+        <i class="fas fa-plus"></i> Create Another Entry
+      </button>
+    </div>
+  </div>
+
+  <!-- Overtime Form -->
+  <div class="glass-container hidden" id="overtimeForm">
+    <button class="back-btn" id="backFromOvertime">
+      <i class="fas fa-arrow-left"></i> Back to Portal
+    </button>
+    
+    <div class="logo-header">
+      <img src="https://raw.githubusercontent.com/raohamza08/EurosHub/main/EurosHub.png" class="logo" alt="EurosHub Logo" />
+      <div class="brand-name">EurosHub</div>
+    </div>
+
+    <h2 class="form-title"><i class="fas fa-business-time" style="margin-right: 10px;"></i>Overtime Request</h2>
+    <p style="text-align: center; margin-bottom: 25px;">Please fill in the details below to submit your overtime request</p>
+    
+    <div id="overtimeFormArea">
+      <div class="side-by-side">
+        <div class="form-group">
+          <label for="employee"><i class="fas fa-user"></i> Employee Name *</label>
+          <select id="employee" name="employee" required>
+            <option value="" disabled selected>Select Employee</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="project"><i class="fas fa-project-diagram"></i> Project *</label>
+          <select id="project" name="project" required>
+            <option value="" disabled selected>Select Project</option>
+          </select>
+        </div>
+      </div>
+
+     <div class="side-by-side">
+  <div class="form-group">
+    <label for="date"><i class="fas fa-calendar-day"></i>Overtime Date *</label>
+    <input type="date" id="date" required>
+  </div>
+
+  <div class="form-group">
+    <label for="reason"><i class="fas fa-question-circle"></i>Reason *</label>
+    <select id="reason" required>
+      <option value="" disabled selected>Select reason</option>
+      <option value="Project Deadline">Project Deadline</option>
+      <option value="Emergency Fix">Emergency Fix</option>
+      <option value="Client Request">Client Request</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+</div>
+
+      <div class="time-group">
+        <div class="form-group">
+          <label for="start"><i class="fas fa-clock"></i>Start Time *</label>
+          <input type="time" id="start" required>
+        </div>
+        <div class="form-group">
+          <label for="end"><i class="fas fa-clock"></i>End Time *</label>
+          <input type="time" id="end" required>
+        </div>
+      </div>
+      
+      <div class="hours-display">
+        <i class="fas fa-calculator"></i> Total: <span id="hoursDisplay">0.00</span> hours
+      </div>
+      <input type="hidden" name="totalTimeOvertime" id="totalTimeOvertime">
+
+      <div class="form-group">
+        <label for="notes"><i class="fas fa-sticky-note"></i>Additional Notes</label>
+        <textarea id="notes" rows="3" placeholder="Any additional information..."></textarea>
+      </div>
+      
+      <div class="button-group-grid">
+        <div class="form-group">
+          <button type="button" id="submitOvertimeBtn" class="btn">
+            <i class="fas fa-paper-plane"></i> Submit Request
+          </button>
+        </div>
+        <div class="form-group">
+          <button type="button" id="resetOvertimeBtn" class="btn btn-secondary">
+            <i class="fas fa-redo"></i> Reset Form
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="thank-you hidden" id="overtimeThankYou">
+      <h3><i class="fas fa-check-circle" style="color: var(--secondary); margin-right: 10px;"></i> Request Submitted!</h3>
+      <p>Your overtime request has been successfully recorded.</p>
+      <button class="btn" id="anotherOvertimeEntry">
+        <i class="fas fa-plus"></i> Create Another Entry
+      </button>
+    </div>
+  </div>
+  </div>
+
+
+
+  <script src="script.js"></script>
+<script>
+    particlesJS('stars-js', {
+      particles: {
+        number: {
+          value: 500,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: { value: "#00d9bd" },
+        shape: { type: "circle" },
+        opacity: {
+          value: 0.4,
+          random: false
+        },
+        size: {
+          value: 1.8,
+          random: true
+        },
+        move: {
+          enable: true,
+          speed: 0.7,
+          direction: "none",
+          random: true,
+          straight: false,
+          out_mode: "out"
+        },
+        line_linked: {
+          enable: true,
+          distance: 100, // ⬆️ More connections
+          color: "#00d9bd",
+          opacity: 0.5,   // ⬆️ Stronger visibility
+          width: 1
+        }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: {
+            enable: true,
+            mode: "bubble"
+          },
+          onclick: { enable: true }
+        },
+        modes: {
+          bubble: {
+            distance: 10,
+            size: 5,
+            duration: 0.4,
+            opacity: 1.5,
+            speed: 4
+          }
+        }
+      },
+      retina_detect: true,
+      background: {
+        color: "#000"
+      }
+    });
+  </script>
+<script>
+  $(document).ready(function () {
+    // Attach to all select2 instances
+    $('#profileName, #projectName, #teamMember, #employee, #project, #reason').on('select2:open', function (e) {
+      const icon = $(this).closest('.form-group').find('.input-icon');
+      icon.addClass('rotate');
+    });
+
+    $('#profileName, #projectName, #teamMember, #employee, #project, #reason').on('select2:close', function (e) {
+      const icon = $(this).closest('.form-group').find('.input-icon');
+      icon.removeClass('rotate');
+    });
+  });
+</script>
+
+<script>
+  let enterButton = null;
+  let tooltip = null;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    enterButton = document.querySelector('#passwordOverlay button');
+    
+    // Tooltip for warning
+    tooltip = document.createElement("div");
+    tooltip.id = "hoverTooltip";
+    tooltip.innerText = "First enter the correct password and then click me.";
+    enterButton.parentElement.style.position = "relative";
+    enterButton.parentElement.appendChild(tooltip);
+
+enterButton.addEventListener("mouseover", async (e) => {
+  const input = document.getElementById('passwordInput').value;
+  const isValid = await verifyPassword(input);
+
+  if (!isValid) {
+    moveIfIncorrect(e); // 🟡 Only move if incorrect
+  } else {
+    resetButtonPosition();
+    tooltip.style.opacity = "0";
+  }
+});
+    enterButton.addEventListener("click", checkPassword);
+    
+    document.getElementById('passwordInput').addEventListener('input', checkPasswordOnType);
+  });
+
+  async function checkPasswordOnType() {
+    const input = document.getElementById('passwordInput').value;
+    if (input.length > 0) { // Basic check - replace with API call if needed
+      const isValid = await verifyPassword(input);
+      if (isValid) {
+        resetButtonPosition();
+        tooltip.style.opacity = "0";
+      }
+    }
+  }
+
+  async function verifyPassword(input) {
+  try {
+    const response = await fetch('/api/check-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password: input }),
+    });
+
+    const data = await response.json();
+    console.log('Password check response:', data); // 👈 LOG
+
+    return data.success;
+  } catch (error) {
+    console.error('Fetch error:', error); // 👈 LOG
+    return false;
+  }
+}
+
+  async function checkPassword() {
+    const input = document.getElementById('passwordInput').value;
+    const isValid = await verifyPassword(input);
+    
+    if (isValid) {
+      resetButtonPosition();
+      tooltip.style.opacity = "0";
+      document.getElementById('passwordOverlay').style.display = "none";
+      document.getElementById('portalContent').style.display = "block";
+    } else {
+      document.getElementById('passwordError').style.display = "block";
+    }
+  }
+
+  function moveIfIncorrect(e) {
+    const input = document.getElementById('passwordInput').value;
+    if (input.length > 0) { // Basic check - replace with API verification if needed
+      e.preventDefault();
+      const overlay = document.getElementById("passwordOverlay");
+      const maxX = overlay.clientWidth - enterButton.offsetWidth;
+      const maxY = overlay.clientHeight - enterButton.offsetHeight;
+
+      const randX = Math.floor(Math.random() * maxX);
+      const randY = Math.floor(Math.random() * maxY);
+
+      enterButton.style.position = "absolute";
+      enterButton.style.left = randX + "px";
+      enterButton.style.top = randY + "px";
+
+      tooltip.style.opacity = "1";
+    }
+  }
+
+  function resetButtonPosition() {
+    enterButton.style.position = "static";
+    enterButton.style.left = "";
+    enterButton.style.top = "";
+  }
+</script>
+
+
+
+
+</body>
+</html>
+
+
+
